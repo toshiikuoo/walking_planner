@@ -11,6 +11,17 @@ void main() {
   runApp(MapApp());
 }
 
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Test",
+      home: MapApp(),
+    );
+  }
+}
+
 class MapApp extends StatefulWidget {
   @override
   _MapAppState createState() => new _MapAppState();
@@ -84,26 +95,36 @@ class _MapAppState extends State<MapApp> {
             inputSection,],
 
         ),
-        floatingActionButton: FloatingActionButton(
-          // When the user presses the button, show an alert dialog containing
-          // the text that the user has entered into the text field.
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  // Retrieve the text the that user has entered by using the
-                  // TextEditingController.
-                  content: Text("メッセージメッセージメッセージメッセージメッセージメッセージ"),
-                );
-              },
-            );
-          },
-          tooltip: 'Show me the value!',
-          child: Icon(Icons.text_fields),
-        ),
+        floatingActionButton: AlartPage(),
 
       ),
     );
   }
 }
+
+class AlartPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+        onPressed: () {
+          testAlert(context);
+        },
+      child: Icon(Icons.text_fields),
+    );
+  }
+//TODO 入力した内容を表示するようにする。
+  void testAlert(BuildContext context) {
+    var alert = AlertDialog(
+      title: Text("Test"),
+      content: Text("Done..!"),
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
+}
+
