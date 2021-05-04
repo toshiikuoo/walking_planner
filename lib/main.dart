@@ -37,6 +37,19 @@ class _MapAppState extends State<MapApp> {
     super.dispose();
   }
 
+  void testAlert(BuildContext context) {
+    var alert = AlertDialog(
+      title: Text("Test"),
+      content: Text(myController.text),
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget mapSection = FlutterMap(
@@ -90,36 +103,17 @@ class _MapAppState extends State<MapApp> {
             inputSection,],
 
         ),
-        floatingActionButton: AlartPage(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            testAlert(context);
+          },
+          child: Icon(Icons.text_fields),
+        ),
 
       );
 
   }
 }
 
-class AlartPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton(
-        onPressed: () {
-          testAlert(context);
-        },
-      child: Icon(Icons.text_fields),
-    );
-  }
-//TODO 入力した内容を表示するようにする。
-  void testAlert(BuildContext context) {
-    var alert = AlertDialog(
-      title: Text("Test"),
-      content: Text("Done..!"),
-    );
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
-  }
-
-}
 
