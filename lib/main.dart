@@ -38,16 +38,20 @@ class _MapAppState extends State<MapApp> {
   }
 
   void testAlert(BuildContext context) {
-    var alert = AlertDialog(
-      title: Text("Test"),
-      content: Text(myController.text),
-    );
+    // var alert = AlertDialog(
+    //   title: Text("Test"),
+    //   content: Text(myController.text),
+    // );
+    //
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return alert;
+    //     });
 
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        });
+    setState(() {
+      myController.text;
+    });
   }
 
   @override
@@ -70,7 +74,7 @@ class _MapAppState extends State<MapApp> {
             // サークルマーカー1設定
             CircleMarker(
               color: Colors.yellow.withOpacity(0.7),
-              radius: 1000,
+              radius: double.parse(myController.text),
               borderColor: Colors.white.withOpacity(0.9),
               borderStrokeWidth: 13,
               point: LatLng(35.681, 139.760),
