@@ -8,7 +8,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
 void main() {
-  runApp(MapApp());
+  runApp(MyApp());
 }
 
 
@@ -79,12 +79,7 @@ class _MapAppState extends State<MapApp> {
 
 
 
-    return MaterialApp(
-      title: 'map_app',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text(_title),
         ),
@@ -97,8 +92,8 @@ class _MapAppState extends State<MapApp> {
         ),
         floatingActionButton: AlartPage(),
 
-      ),
-    );
+      );
+
   }
 }
 
