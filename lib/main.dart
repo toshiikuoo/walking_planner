@@ -30,6 +30,7 @@ class MapApp extends StatefulWidget {
 class _MapAppState extends State<MapApp> {
   String _title = 'map_app';
   final myController = TextEditingController();
+  var radius = 100.0;
 
   @override
   void dispose(){
@@ -50,7 +51,7 @@ class _MapAppState extends State<MapApp> {
     //     });
 
     setState(() {
-      myController.text;
+      radius = double.parse(myController.text);
     });
   }
 
@@ -74,9 +75,9 @@ class _MapAppState extends State<MapApp> {
             // サークルマーカー1設定
             CircleMarker(
               color: Colors.yellow.withOpacity(0.7),
-              radius: double.parse(myController.text),
+              radius: radius,
               borderColor: Colors.white.withOpacity(0.9),
-              borderStrokeWidth: 13,
+              borderStrokeWidth: 2,
               point: LatLng(35.681, 139.760),
               useRadiusInMeter: true,
             ),

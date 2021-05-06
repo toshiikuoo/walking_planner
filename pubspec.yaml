@@ -25,6 +25,7 @@ dependencies:
   latlng: any
   flutter:
     sdk: flutter
+  flutter_map_location: any
 
 
   # The following adds the Cupertino Icons font to your application.
