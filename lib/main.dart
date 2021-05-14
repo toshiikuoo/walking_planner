@@ -3,9 +3,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// flutter_mapパッケージ追加
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'package:flutter_map_location/flutter_map_location.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,6 +32,9 @@ class _MapAppState extends State<MapApp> {
   String _title = 'map_app';
   final myController = TextEditingController();
   var radius = 100.0;
+
+  final MapController mapController = MapController();
+  final List<Marker> userLocationMarkers = <Marker>[];
 
   @override
   void dispose(){
@@ -58,8 +62,11 @@ class _MapAppState extends State<MapApp> {
   @override
   Widget build(BuildContext context) {
     Widget mapSection = FlutterMap(
-      // マップ表示設定
+      mapController: mapController,
       options: MapOptions(
+        plugins: <MapPlugin>[
+          LocationPlugin(),
+        ],
         center: LatLng(35.681, 139.767),
         zoom: 14.0,
       ),
@@ -78,13 +85,64 @@ class _MapAppState extends State<MapApp> {
               radius: radius,
               borderColor: Colors.white.withOpacity(0.9),
               borderStrokeWidth: 2,
+              //TODO:円を現在地に書く
               point: LatLng(35.681, 139.760),
+              // point: ld?.location,
               useRadiusInMeter: true,
             ),
-            // サークルマーカー2設定
+
 
           ],
         ),
+
+        MarkerLayerOptions(markers: userLocationMarkers),
+        LocationOptions(
+          markers: userLocationMarkers,
+          onLocationUpdate: (LatLngData ld) {
+            print('Location updated: ${ld?.location}');
+          },
+          onLocationRequested: (LatLngData ld) {
+            if (ld == null || ld.location == null) {
+              return;
+            }
+            mapController?.move(ld.location, 16.0);
+          },
+          buttonBuilder: (BuildContext context,
+              ValueNotifier<LocationServiceStatus> status,
+              Function onPressed) {
+            return Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+                child: FloatingActionButton(
+                    child: ValueListenableBuilder<LocationServiceStatus>(
+                        valueListenable: status,
+                        builder: (BuildContext context,
+                            LocationServiceStatus value, Widget child) {
+                          switch (value) {
+                            case LocationServiceStatus.disabled:
+                            case LocationServiceStatus.permissionDenied:
+                            case LocationServiceStatus.unsubscribed:
+                              return const Icon(
+                                Icons.location_disabled,
+                                color: Colors.white,
+                              );
+                              break;
+                            default:
+                              return const Icon(
+                                Icons.location_searching,
+                                color: Colors.white,
+                              );
+                              break;
+                          }
+                        }),
+                    onPressed: () => onPressed()),
+              ),
+            );
+          },
+        ),
+
+
       ],
     );
 
@@ -108,12 +166,12 @@ class _MapAppState extends State<MapApp> {
             inputSection,],
 
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            testAlert(context);
-          },
-          child: Icon(Icons.text_fields),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     testAlert(context);
+        //   },
+        //   child: Icon(Icons.text_fields),
+        // ),
 
       );
 
