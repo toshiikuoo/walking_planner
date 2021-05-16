@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_map_location/flutter_map_location.dart';
-import 'package:geolocator/geolocator.dart';
+
 
 void main() {
   runApp(MyApp());
