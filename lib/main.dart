@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_map_location/flutter_map_location.dart';
-
+import 'package:location/location.dart';
 
 void main() {
   runApp(MyApp());
@@ -153,6 +153,13 @@ class _MapAppState extends State<MapApp> {
       controller: myController,
     );
 
+    Widget circleButton = OutlinedButton(
+      onPressed: () {
+        testAlert(context);
+      },
+      child: Icon(Icons.text_fields),
+    );
+
 
 
     return Scaffold(
@@ -161,22 +168,20 @@ class _MapAppState extends State<MapApp> {
         ),
         // flutter_map設定
         body: Stack(
-          children: [
+          children: <Widget>[
             mapSection,
-            inputSection,],
+            Column(
+                children:[
+                  inputSection,
+                  circleButton
+                ]
+
+            )],
 
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     testAlert(context);
-        //   },
-        //   child: Icon(Icons.text_fields),
-        // ),
+
 
       );
 
   }
 }
-
-
-
