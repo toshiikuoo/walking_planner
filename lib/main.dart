@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
+// import 'package:latlng/latlng.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_map_location/flutter_map_location.dart';
 import 'package:location/location.dart';
@@ -11,7 +12,6 @@ import 'package:location/location.dart';
 void main() {
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -36,24 +36,50 @@ class _MapAppState extends State<MapApp> {
   final MapController mapController = MapController();
   final List<Marker> userLocationMarkers = <Marker>[];
 
+  LocationData locationData;
+  Location location = new Location();
+
   @override
-  void dispose(){
+  void initstate() {
+    super.initState();
+    preLoc();
+    getLoc();
+  }
+
+  Future<void> preLoc() async{
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+  }
+
+  Future<LatLng> getLoc() async {
+    locationData = await location.getLocation();
+    print("location is... ${locationData.latitude}");
+    return LatLng(locationData.latitude, locationData.longitude);
+  }
+
+  @override
+  void dispose() {
     myController.dispose();
     super.dispose();
   }
 
   void testAlert(BuildContext context) {
-    // var alert = AlertDialog(
-    //   title: Text("Test"),
-    //   content: Text(myController.text),
-    // );
-    //
-    // showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return alert;
-    //     });
-
     setState(() {
       radius = double.parse(myController.text);
     });
@@ -74,8 +100,7 @@ class _MapAppState extends State<MapApp> {
         //背景地図読み込み (Maptiler)
         TileLayerOptions(
             urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c']
-        ),
+            subdomains: ['a', 'b', 'c']),
         // サークルマーカー設定
         CircleLayerOptions(
           circles: [
@@ -90,8 +115,6 @@ class _MapAppState extends State<MapApp> {
               // point: ld?.location,
               useRadiusInMeter: true,
             ),
-
-
           ],
         ),
 
@@ -108,8 +131,7 @@ class _MapAppState extends State<MapApp> {
             mapController?.move(ld.location, 16.0);
           },
           buttonBuilder: (BuildContext context,
-              ValueNotifier<LocationServiceStatus> status,
-              Function onPressed) {
+              ValueNotifier<LocationServiceStatus> status, Function onPressed) {
             return Align(
               alignment: Alignment.bottomRight,
               child: Padding(
@@ -141,8 +163,6 @@ class _MapAppState extends State<MapApp> {
             );
           },
         ),
-
-
       ],
     );
 
@@ -160,28 +180,20 @@ class _MapAppState extends State<MapApp> {
       child: Icon(Icons.text_fields),
     );
 
-
-
     return Scaffold(
-        appBar: AppBar(
-          title: Text(_title),
-        ),
-        // flutter_map設定
-        body: Stack(
-          children: <Widget>[
-            mapSection,
-            Column(
-                children:[
-                  inputSection,
-                  circleButton
-                ]
-
-            )],
-
-        ),
+      appBar: AppBar(
+        title: Text(_title),
+      ),
+      // flutter_map設定
+      body: Stack(
+        children: <Widget>[
+          mapSection,
+          Column(children: [inputSection, circleButton])
+        ],
+      ),
+    );
 
 
-      );
 
   }
 }
