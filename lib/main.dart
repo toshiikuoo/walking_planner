@@ -87,84 +87,173 @@ class _MapAppState extends State<MapApp> {
 
   @override
   Widget build(BuildContext context) {
-    Widget mapSection = FlutterMap(
-      mapController: mapController,
-      options: MapOptions(
-        plugins: <MapPlugin>[
-          LocationPlugin(),
-        ],
-        center: LatLng(35.681, 139.767),
-        zoom: 14.0,
-      ),
-      layers: [
-        //背景地図読み込み (Maptiler)
-        TileLayerOptions(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c']),
-        // サークルマーカー設定
-        CircleLayerOptions(
-          circles: [
-            // サークルマーカー1設定
-            CircleMarker(
-              color: Colors.yellow.withOpacity(0.7),
-              radius: radius,
-              borderColor: Colors.white.withOpacity(0.9),
-              borderStrokeWidth: 2,
-              //TODO:円を現在地に書く
-              point: LatLng(35.681, 139.760),
-              // point: ld?.location,
-              useRadiusInMeter: true,
+    FutureBuilder mapSection = FutureBuilder<LatLng>(
+      future: getLoc(),
+      builder: (context, AsyncSnapshot<LatLng> snapshot) {
+        if (snapshot.hasData) {
+          return FlutterMap(
+            mapController: mapController,
+            options: MapOptions(
+              plugins: <MapPlugin>[
+                LocationPlugin(),
+              ],
+              center: snapshot.data,
+              zoom: 14.0,
             ),
-          ],
-        ),
-
-        MarkerLayerOptions(markers: userLocationMarkers),
-        LocationOptions(
-          markers: userLocationMarkers,
-          onLocationUpdate: (LatLngData ld) {
-            print('Location updated: ${ld?.location}');
-          },
-          onLocationRequested: (LatLngData ld) {
-            if (ld == null || ld.location == null) {
-              return;
-            }
-            mapController?.move(ld.location, 16.0);
-          },
-          buttonBuilder: (BuildContext context,
-              ValueNotifier<LocationServiceStatus> status, Function onPressed) {
-            return Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-                child: FloatingActionButton(
-                    child: ValueListenableBuilder<LocationServiceStatus>(
-                        valueListenable: status,
-                        builder: (BuildContext context,
-                            LocationServiceStatus value, Widget child) {
-                          switch (value) {
-                            case LocationServiceStatus.disabled:
-                            case LocationServiceStatus.permissionDenied:
-                            case LocationServiceStatus.unsubscribed:
-                              return const Icon(
-                                Icons.location_disabled,
-                                color: Colors.white,
-                              );
-                              break;
-                            default:
-                              return const Icon(
-                                Icons.location_searching,
-                                color: Colors.white,
-                              );
-                              break;
-                          }
-                        }),
-                    onPressed: () => onPressed()),
+            layers: [
+              //背景地図読み込み (Maptiler)
+              TileLayerOptions(
+                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c']),
+              // サークルマーカー設定
+              CircleLayerOptions(
+                circles: [
+                  // サークルマーカー1設定
+                  CircleMarker(
+                    color: Colors.yellow.withOpacity(0.7),
+                    radius: radius,
+                    borderColor: Colors.white.withOpacity(0.9),
+                    borderStrokeWidth: 2,
+                    //TODO:円を現在地に書く
+                    point: snapshot.data,
+                    useRadiusInMeter: true,
+                  ),
+                ],
               ),
-            );
-          },
-        ),
-      ],
+
+              MarkerLayerOptions(markers: userLocationMarkers),
+              LocationOptions(
+                markers: userLocationMarkers,
+                onLocationUpdate: (LatLngData ld) {
+                  print('Location updated: ${ld?.location}');
+                },
+                onLocationRequested: (LatLngData ld) {
+                  if (ld == null || ld.location == null) {
+                    return;
+                  }
+                  mapController?.move(ld.location, 16.0);
+                },
+                buttonBuilder: (BuildContext context,
+                    ValueNotifier<LocationServiceStatus> status, Function onPressed) {
+                  return Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+                      child: FloatingActionButton(
+                          child: ValueListenableBuilder<LocationServiceStatus>(
+                              valueListenable: status,
+                              builder: (BuildContext context,
+                                  LocationServiceStatus value, Widget child) {
+                                switch (value) {
+                                  case LocationServiceStatus.disabled:
+                                  case LocationServiceStatus.permissionDenied:
+                                  case LocationServiceStatus.unsubscribed:
+                                    return const Icon(
+                                      Icons.location_disabled,
+                                      color: Colors.white,
+                                    );
+                                    break;
+                                  default:
+                                    return const Icon(
+                                      Icons.location_searching,
+                                      color: Colors.white,
+                                    );
+                                    break;
+                                }
+                              }),
+                          onPressed: () => onPressed()),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        }
+        else{
+          return CircularProgressIndicator();
+        }
+      }
     );
+
+
+    // Widget mapSection = FlutterMap(
+    //   mapController: mapController,
+    //   options: MapOptions(
+    //     plugins: <MapPlugin>[
+    //       LocationPlugin(),
+    //     ],
+    //     center: LatLng(35.681, 139.767),
+    //     zoom: 14.0,
+    //   ),
+    //   layers: [
+    //     //背景地図読み込み (Maptiler)
+    //     TileLayerOptions(
+    //         urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    //         subdomains: ['a', 'b', 'c']),
+    //     // サークルマーカー設定
+    //     CircleLayerOptions(
+    //       circles: [
+    //         // サークルマーカー1設定
+    //         CircleMarker(
+    //           color: Colors.yellow.withOpacity(0.7),
+    //           radius: radius,
+    //           borderColor: Colors.white.withOpacity(0.9),
+    //           borderStrokeWidth: 2,
+    //           //TODO:円を現在地に書く
+    //           point: LatLng(35.681, 139.760),
+    //           // point: ld?.location,
+    //           useRadiusInMeter: true,
+    //         ),
+    //       ],
+    //     ),
+    //
+    //     MarkerLayerOptions(markers: userLocationMarkers),
+    //     LocationOptions(
+    //       markers: userLocationMarkers,
+    //       onLocationUpdate: (LatLngData ld) {
+    //         print('Location updated: ${ld?.location}');
+    //       },
+    //       onLocationRequested: (LatLngData ld) {
+    //         if (ld == null || ld.location == null) {
+    //           return;
+    //         }
+    //         mapController?.move(ld.location, 16.0);
+    //       },
+    //       buttonBuilder: (BuildContext context,
+    //           ValueNotifier<LocationServiceStatus> status, Function onPressed) {
+    //         return Align(
+    //           alignment: Alignment.bottomRight,
+    //           child: Padding(
+    //             padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+    //             child: FloatingActionButton(
+    //                 child: ValueListenableBuilder<LocationServiceStatus>(
+    //                     valueListenable: status,
+    //                     builder: (BuildContext context,
+    //                         LocationServiceStatus value, Widget child) {
+    //                       switch (value) {
+    //                         case LocationServiceStatus.disabled:
+    //                         case LocationServiceStatus.permissionDenied:
+    //                         case LocationServiceStatus.unsubscribed:
+    //                           return const Icon(
+    //                             Icons.location_disabled,
+    //                             color: Colors.white,
+    //                           );
+    //                           break;
+    //                         default:
+    //                           return const Icon(
+    //                             Icons.location_searching,
+    //                             color: Colors.white,
+    //                           );
+    //                           break;
+    //                       }
+    //                     }),
+    //                 onPressed: () => onPressed()),
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //   ],
+    // );
 
     Widget inputSection = TextField(
       decoration: new InputDecoration(labelText: "Enter your number"),
