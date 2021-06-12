@@ -197,15 +197,17 @@ class _MapAppState extends State<MapApp> {
         });
 
     Widget inputMeterSection = Flexible(
-        child: TextField(
+      child: TextField(
       decoration: new InputDecoration(
-        labelText: "歩く距離(メートル)",
-        fillColor: Colors.grey[50],
-        filled: true,
+      labelText: "歩く距離(メートル)",
+      fillColor: Colors.grey[50],
+      filled: true,
+        hintText: "歩く距離を入力"
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: myMeterController,
+      autofocus: true,
     ));
 
     Widget inputCalSection = Flexible(
@@ -214,6 +216,7 @@ class _MapAppState extends State<MapApp> {
         labelText: "消費カロリー(kcal)",
         fillColor: Colors.grey[50],
         filled: true,
+        hintText: "消費カロリーを入力"
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -243,7 +246,9 @@ class _MapAppState extends State<MapApp> {
     //TODO:レイアウト整える
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: Text(_title,
+        style: TextStyle(fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.w900),),
         backgroundColor: Colors.red,
       ),
       body: Stack(
@@ -255,9 +260,11 @@ class _MapAppState extends State<MapApp> {
               inputCalSection,
             ]),
             Row(children: [
-              circleButton,
-              calButton
-            ],)
+              Expanded(
+              child: circleButton),
+              Expanded(child: calButton),
+            ],),
+
           ])
         ],
       ),
