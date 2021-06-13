@@ -88,7 +88,7 @@ class _MapAppState extends State<MapApp> {
   void adaptMeter(BuildContext context) {
     setState(() {
       radius = double.parse(myMeterController.text);
-      double kcal = radius * 48/1000;
+      double kcal = radius * 48 / 1000;
       myCalController.text = kcal.toStringAsFixed(2);
     });
   }
@@ -96,7 +96,7 @@ class _MapAppState extends State<MapApp> {
   void adaptKcal(BuildContext context) {
     setState(() {
       double kcal = double.parse(myCalController.text);
-      radius = kcal*1000/48;
+      radius = kcal * 1000 / 48;
       myMeterController.text = radius.round().toString();
     });
   }
@@ -197,13 +197,12 @@ class _MapAppState extends State<MapApp> {
         });
 
     Widget inputMeterSection = Flexible(
-      child: TextField(
+        child: TextField(
       decoration: new InputDecoration(
-      labelText: "歩く距離(メートル)",
-      fillColor: Colors.grey[50],
-      filled: true,
-        hintText: "歩く距離を入力"
-      ),
+          labelText: "歩く距離(メートル)",
+          fillColor: Colors.grey[50],
+          filled: true,
+          hintText: "歩く距離を入力"),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: myMeterController,
@@ -213,11 +212,10 @@ class _MapAppState extends State<MapApp> {
     Widget inputCalSection = Flexible(
         child: TextField(
       decoration: new InputDecoration(
-        labelText: "消費カロリー(kcal)",
-        fillColor: Colors.grey[50],
-        filled: true,
-        hintText: "消費カロリーを入力"
-      ),
+          labelText: "消費カロリー(kcal)",
+          fillColor: Colors.grey[50],
+          filled: true,
+          hintText: "消費カロリーを入力"),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       controller: myCalController,
@@ -246,9 +244,11 @@ class _MapAppState extends State<MapApp> {
     //TODO:レイアウト整える
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title,
-        style: TextStyle(fontStyle: FontStyle.italic,
-        fontWeight: FontWeight.w900),),
+        title: Text(
+          _title,
+          style: TextStyle(
+              fontStyle: FontStyle.italic, fontWeight: FontWeight.w900),
+        ),
         backgroundColor: Colors.red,
       ),
       body: Stack(
@@ -259,12 +259,12 @@ class _MapAppState extends State<MapApp> {
               inputMeterSection,
               inputCalSection,
             ]),
-            Row(children: [
-              Expanded(
-              child: circleButton),
-              Expanded(child: calButton),
-            ],),
-
+            Row(
+              children: [
+                Expanded(child: circleButton),
+                Expanded(child: calButton),
+              ],
+            ),
           ])
         ],
       ),
