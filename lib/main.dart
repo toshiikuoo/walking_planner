@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       title: "Test",
       home: MapApp(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -100,8 +101,6 @@ class _MapAppState extends State<MapApp> {
       myMeterController.text = radius.round().toString();
     });
   }
-
-  //距離をカロリーに変換する関数を書く。１Kmで48kcal換算
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +240,6 @@ class _MapAppState extends State<MapApp> {
       ),
     );
 
-    //TODO:レイアウト整える
     return Scaffold(
       appBar: AppBar(
         title: Text(
