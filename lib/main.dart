@@ -116,6 +116,7 @@ class _MapAppState extends State<MapApp> {
                 ],
                 center: snapshot.data,
                 zoom: 14.0,
+                interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               ),
               layers: [
                 //背景地図読み込み (Maptiler)
@@ -157,7 +158,7 @@ class _MapAppState extends State<MapApp> {
                       alignment: Alignment.bottomRight,
                       child: Padding(
                         padding:
-                            const EdgeInsets.only(bottom: 16.0, right: 16.0),
+                            const EdgeInsets.only(bottom: 16.0,right: 16.0),
                         child: FloatingActionButton(
                             child:
                                 ValueListenableBuilder<LocationServiceStatus>(
